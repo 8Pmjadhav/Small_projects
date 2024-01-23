@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rock_paper</title>
+    <style>
+        body {
+            background-color: #282c35; 
+            text-align: center;
+            font-family: 'Arial', sans-serif;
+            color: #fff; 
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        h1 {
+            color: #f39c12; 
+            margin-top: 20px;
+        }
+
+        .container {
+            margin: 20px 20%;
+            background-color: #ecf0f1; 
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            align-items: center;
+            border-radius: 16px;
+            padding: 10px;
+        }
+
+        .container button {
+            padding: 20px;
+            font-size: larger;
+            margin: 10px;
+            width :11%;
+            border-radius: 18px;
+            background-color: #3498db;
+            color: #fff;
+            cursor: pointer;
+            border: none;
+        }
+
+        .container button:hover {
+            background-color: #2980b9; 
+        }
+
+        .cont1 {
+            border-radius: 18px;
+            padding: 20px;
+            margin: 20px 10%;
+            display: flex;
+            flex-direction: column;
+            background-color: #1abc9c; 
+            align-items: center;
+        }
+
+        .cont1 button {
+            font-size: larger;
+            padding: 20px;
+            border-radius: 18px;
+            background-color: #e74c3c; 
+            color: #fff;
+            cursor: pointer;
+            border: none;
+        }
+
+        .cont1 button:hover {
+            background-color: #c0392b; 
+        }
+
+        .prev {
+            height: 300px;
+            width: 90%;
+            background-color: #fff;
+            padding: 20px;
+            overflow-y: auto;
+            border-radius: 10px;
+            margin-top: 20px;
+            color: #2980b9;
+        }
+
+        @media screen and (max-width:1700px) {
+            .container {
+                margin: 20px 2%;
+            }
+            .cont1 {
+                margin: 20px 2%;
+            }
+            h2, h3 {
+                font-size: medium;
+            }
+            .container button{
+                width: auto;
+                padding: 15px;
+                font-size: large;
+                margin : 5px
+            }
+        }
+        @media screen and (min-width:600) and  (max-width:1800px) {
+            
+        }
+    </style>
+</head>
+<body>
+    <h1>Rock - Paper - Scissors</h1>
+    <div class="container ">
+        <button id="rock" onclick="fun(1)">Rock</button>
+        <button id="paper" onclick="fun(2)">Paper</button>
+        <button id="scissors" onclick="fun(3)">Scissors</button>
+    </div>
+    <div class="cont1">
+        <button onclick="reset()">Reset</button>
+        <h3 id="score">Score</h3>
+        <h2 id="result">Start playing</h2>
+        <h3>Previous Scores</h3>
+        <div class="prev">
+            
+        </div>
+    </div>   
+    
+    
+    <script>
+        let score = JSON.parse( localStorage.getItem("score"));
+        let result = document.getElementById("result");
+        let scoree = document.getElementById("score");
+        let prev = document.getElementsByClassName("prev")[0];
+        let re = "";
+
+        if(!score){
+            score = {
+                wins : 0,
+                losses : 0,
+                ties : 0
+            };
+            localStorage.setItem("score",JSON.stringify(score));
+        }
+        else{
+            scoree.innerHTML = `Wins : ${score.wins} Losses : ${score.losses} Ties : ${score.ties}`;
+        }
+
+        function reset(){
+            localStorage.removeItem("score");
+            score.wins = 0;
+            score.losses = 0;
+            score.ties = 0;
+            //localStorage.setItem("score",JSON.stringify(score));
+
+            result.innerHTML = "Play Again ......";
+            scoree.innerHTML = `Wins : ${score.wins} Losses : ${score.losses} Ties : ${score.ties}`;
+            prev.innerHTML = "";
+        }
+
+        function fun(user){
+            var comp = Math.floor(Math.random()*3)+1;
+            let c = ["Rock","Paper","Scissors"];
+            ree = `You choose ${c[user-1]} and Computer chooses ${c[comp-1]} `;
+            if(user==1){
+                
+                if(comp==1){
+                    re= `Tie`;
+                }
+                else if(comp==2){
+                    re= `Computer Wins`;
+                }
+                else{
+                    re= `User Wins`;
+                }
+            }
+            else if(user==2){
+                if(comp==1){
+                    re= `User Wins`;
+                }
+                else if(comp==2){
+                    re= `Tie`;
+                }
+                else{
+                    re= `Computer Wins`;
+                }
+            }
+            else{
+                if(comp==1){
+                    re= `Computer Wins`;
+                }
+                else if(comp==2){
+                    re= `User Wins`;
+                }
+                else{
+                    re= `Tie`;
+                }
+            }
+            let color_choose ;
+            if(re==="Tie"){
+                score.ties++;
+                color_choose = 2;
+            }
+            else if(re==="User Wins"){
+                score.wins++;
+                color_choose = 1;
+            }
+            else{
+                score.losses++;
+                color_choose = 3;
+            }
+            result.innerHTML = ree + ` " ${re}" `;
+            scoree.innerHTML = `Wins : ${score.wins} Losses : ${score.losses} Ties : ${score.ties}`;
+            localStorage.setItem("score",JSON.stringify(score));
+
+            
+            let newscore = document.createElement("p");
+            newscore.innerHTML = `Wins : ${score.wins} Losses : ${score.losses} Ties : ${score.ties}`;
+            
+            if(color_choose===1){
+                newscore.style.color = "green";
+            }
+            else if(color_choose===3){
+                newscore.style.color = "red";
+            }
+            prev.appendChild(newscore);
+        }
+    </script>
+</body>
+</html>
